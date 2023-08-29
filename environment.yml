@@ -1,0 +1,17 @@
+name: ptof-pxtd
+channels:
+  - conda-forge
+dependencies:
+  - spyder
+  - numpy
+  - scipy
+  - astropy
+  - h5py
+  - pyhdf
+  - matplotlib
+  - pandas
+  - opencv
+  - openpyxl
+  - scikit-image
+  - numba
+  - emcee
