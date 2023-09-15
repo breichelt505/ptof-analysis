@@ -19,10 +19,7 @@ def dYdt_0_func_gauss(t, E, N, mu_t, sig_t):
     dYdt_0 = N/np.sqrt(2*np.pi)/sig_t * np.exp(-0.5 * ((t-mu_t)/sig_t)**2)
     return dYdt_0
 
-'''
-return energy spectrum of product from fusion reactions in plasma w/ ion temperature Ti [keV]
-and yield Y
-'''
+# return a fusion product energy spectrum from plasma w/ ion temperature Ti [keV] and yield Y
 def ballabio_spectrum(reaction, Ti, Y):
     if reaction == "DD":
         a1E = 4.69515
