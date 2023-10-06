@@ -80,7 +80,8 @@ colors = {"1000I" : "r",
           "SC1000A" : "k",
           "1000G" : "mediumseagreen",
           "1000H" : "c",
-          "1000K" : "m"}
+          "1000K" : "m",
+          "HY200A" : "gray"}
 
 #%%
 
@@ -93,7 +94,9 @@ for d in pathlib.Path(r"C:\Users\blr\Dropbox (MIT)\PTOF_GUI_Ben\Analysis Files")
             data = pd.read_excel(f)
             detector = data["Unnamed: 4"][12]
             print(detector, expname)
-    if detector.upper() not in ["1000I","SC1000A","1000G","1000H","1000K"]:
+    # if detector.upper() not in ["1000I","SC1000A","1000G","1000H","1000K"]:
+    #     continue
+    if detector.upper() not in ["HY200A", "SC1000A"]:
         continue
     t_tek, V_tek, t_FTD, V_FTD = find_waveforms(expname)
     plot_FTD = "n"

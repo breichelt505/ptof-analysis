@@ -11,27 +11,27 @@ import numpy as np
 import numba
 import time
 import matplotlib.pyplot as plt 
-import source
+import src.source as source
 import propagation
-import utils
-import detector
+import src.utils as utils
+import src.detector as detector
 
-Emin = 0.01
-Emax = 0.09
+Emin = 0.001
+Emax = 0.03
 dt = 0.01
 nE = 300
 m = 1.0
 mu_t = 0.0
-sig_t = 0.01
-mu_E = 0.05
-sig_E = 0.01
-t0 = 0.1
+sig_t = 0.05
+mu_E = 0.0141
+sig_E = 8.5e-5
+t0 = 0.00
 N = 1.0
 
           
 # plt.figure()
 tic = time.time()
-for x in np.linspace(0.0,30,10):        
+for x in np.linspace(0.0,3,10):        
     # plt.figure()
     t_arr, E_arr = propagation.get_t_and_E_arr(dt, nE, t0-0.5, t0+0.5, Emin, Emax, m, x)
     d2YdtdE = propagation.d2YdtdE_func_vacprop(
