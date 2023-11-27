@@ -69,9 +69,10 @@ def find_H_nonlinear_phase_model(cable, length, f_arr):
     ro = data["ro (in)"][cable]
     roo = data["roo (in)"][cable]
     g_c = data["g_c (S*m)"][cable]
+    losstan_d = data["losstan"][cable]
     
     eps_r_d = 1/v**2
-    losstan_d = v*k2/2780
+    # losstan_d = v*k2/2780
     
     Z0, gamma, H = find_H_from_cable_params(
         float(ri*u.imperial.inch/u.m),
