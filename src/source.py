@@ -19,9 +19,9 @@ def dYdt_0_func_gauss(t, E, N, mu_t, sig_t):
     dYdt_0 = N/np.sqrt(2*np.pi)/sig_t * np.exp(-0.5 * ((t-mu_t)/sig_t)**2)
     return dYdt_0
 
-# return a fusion product energy spectrum from plasma w/ ion temperature Ti [keV] and yield Y
-def ballabio_spectrum(reaction, Ti, Y):
-    if reaction == "DD":
+def ballabio_spectrum(reaction, Ti, Y, num_energies):
+"""return a fusion product energy spectrum from plasma w/ ion temperature Ti [keV] and yield Y"""
+    if reaction == "DDn":
         a1E = 4.69515
         a2E = -0.040729
         a3E = 0.47
@@ -40,7 +40,7 @@ def ballabio_spectrum(reaction, Ti, Y):
         FWHM = w0 * (1 + deltaw) * np.sqrt(Ti)
         Estdev  = FWHM / (2 * np.sqrt(2 * np.log(2))) * 1e-3 # MeV
     
-    elif reaction == "DT":
+    elif reaction == "DTn":
         a1E = 5.30509
         a2E = 2.4736 * 1e-3
         a3E = 1.84
@@ -61,14 +61,17 @@ def ballabio_spectrum(reaction, Ti, Y):
     
     # full formula for D3He not given by Ballabio
     # so more approximate version is used, which should still be accurate to < 5% for Ti < 40keV
-    elif reaction == "D3He": 
+    elif reaction == "D3Hep": 
         E0 = 14.630 # Mev
         w0 = 180.985 # kev^(1/2)
         deltaE = (9 * Ti **(2./3)+Ti)*1e-3 # MeV
         Estdev = ((w0*(Ti)^(1/2))/(2*np.sqrt(2*np.log(2))))*1e-3 # MeV
         Emean = E0 + deltaE # MeV
 
-    num_energies = int(10. * Estdev * 200)
     energies = np.linspace(Emean - 5*Estdev, Emean + 5*Estdev, num_energies)
     spectrum = scipy.stats.norm.pdf(energies, Emean, Estdev) * Y
     return energies, spectrum
+
+##############################################################################
+########################### HELPER FUNCTIONS #################################
+##############################################################################
