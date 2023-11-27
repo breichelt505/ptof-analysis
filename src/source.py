@@ -20,7 +20,8 @@ def dYdt_0_func_gauss(t, E, N, mu_t, sig_t):
     return dYdt_0
 
 def ballabio_spectrum(reaction, Ti, Y, num_energies):
-"""return a fusion product energy spectrum from plasma w/ ion temperature Ti [keV] and yield Y"""
+    """return a fusion product energy spectrum from plasma w/ ion temperature Ti [keV] and yield Y
+    """
     if reaction == "DDn":
         a1E = 4.69515
         a2E = -0.040729
@@ -68,7 +69,7 @@ def ballabio_spectrum(reaction, Ti, Y, num_energies):
         Estdev = ((w0*(Ti)^(1/2))/(2*np.sqrt(2*np.log(2))))*1e-3 # MeV
         Emean = E0 + deltaE # MeV
 
-    energies = np.linspace(Emean - 5*Estdev, Emean + 5*Estdev, num_energies)
+    energies = np.linspace(Emean - 10*Estdev, Emean + 10*Estdev, num_energies)
     spectrum = scipy.stats.norm.pdf(energies, Emean, Estdev) * Y
     return energies, spectrum
 
