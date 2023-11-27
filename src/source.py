@@ -69,7 +69,7 @@ def ballabio_spectrum(reaction, Ti, Y, num_energies):
         Estdev = ((w0*(Ti)^(1/2))/(2*np.sqrt(2*np.log(2))))*1e-3 # MeV
         Emean = E0 + deltaE # MeV
 
-    energies = np.linspace(Emean - 10*Estdev, Emean + 10*Estdev, num_energies)
+    energies = np.linspace(max(Emean - 10*Estdev,0.0), Emean + 10*Estdev, num_energies)
     spectrum = scipy.stats.norm.pdf(energies, Emean, Estdev) * Y
     return energies, spectrum
 
