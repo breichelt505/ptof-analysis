@@ -51,10 +51,18 @@ def d2YdtdE_func_vacprop(t, E, x, m, d2YdtdE_0_func, params):
     d2YdtdE_arr = d2YdtdE_0_func(tret, E, *params)
     return d2YdtdE_arr
 
-def dYdt_func_vacprop_gauss_transferfn(t, x, m, E_arr, sig_E, mu_E):
-    tof = tof_func(E, m, x)
-    d2YdtdE_arr = d2YdtdE_0_func(tret, E, *params)
-    return d2YdtdE_arr
+def dYdt_IRF_vacprop_gauss(t, x, m, sig_E, mu_E):
+    E = E_func(t, m, x)
+    dEdtof = dEdtof_func(E, m, x)
+    IRF = dEdtof * np.exp(-0.5*((E-mu_E)/sig_E)**2) / np.sqrt(2*np.pi*sig_E**2)
+    return IRF
+
+def dYdt_IRF_vacprop_arbdYdE(t, x, m, E_arr, dYdE_arr):
+    E_tof = E_func(t, m, x)
+    dEdtof = dEdtof_func(E_tof, m, x)
+    dYdE_tof = interp.interp1d(E_arr, dYdE_arr,bounds_error=False,fill_value=0.0)(E_tof)
+    IRF = -dEdtof * dYdE_tof
+    return IRF
 
 def dYdt_func_vacprop_gaussdYdE(t, E, x, m, dYdt):
     """
@@ -151,15 +159,3 @@ def get_t_and_E_arr(dt, nE, t0_min, t0_max, E0_min, E0_max, m, x):
     
     return t_arr, E_arr
 
-def dYdt_IRF_vacprop_gauss(t, x, m, sig_E, mu_E):
-    E = E_func(t, m, x)
-    dEdtof = dEdtof_func(E, m, x)
-    IRF = dEdtof * np.exp(-0.5*((E-mu_E)/sig_E)**2) / np.sqrt(2*np.pi*sig_E**2)
-    return IRF
-
-def dYdt_IRF_vacprop_arbdYdE(t, x, m, E_arr, dYdE_arr):
-    E_tof = E_func(t, m, x)
-    dEdtof = dEdtof_func(E_tof, m, x)
-    dYdE_tof = interp.interp1d(E_arr, dYdE_arr,bounds_error=False,fill_value=0.0)(E_tof)
-    IRF = -dEdtof * dYdE_tof
-    return IRF
