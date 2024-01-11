@@ -5,6 +5,22 @@ import scipy.interpolate as interp
 import numba
 
 def subtract_const_bg(t, V, t_fit_min=-np.inf, t_fit_max=-1000):
+    """
+    Subtract constant background value from waveform based off
+    of mean between bounds.
+
+    Args:
+        t (numpy.ndarray): 1D array of times
+        V (numpy.ndarray): 1D array of corresponding signal voltages
+        t_fit_min (float, optional): Lower bound for finding constant
+            component of signal. Defaults to -np.inf.
+        t_fit_max (int, optional): Upper bound for finding constant
+            component of signal. Defaults to -1000.
+
+    Returns:
+        numpy.ndarray: input voltages with constant background subtracted
+            out.
+    """
     mask = (t>t_fit_min)*(t<t_fit_max)
     return V - np.mean(V[mask])
 
