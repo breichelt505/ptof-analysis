@@ -123,7 +123,7 @@ def E_func(tof, m, x):
     E = m * ((1 - (x/tof)**2)**(-1/2) - 1)
     return E
 
-@numba.njit()
+# @numba.njit()
 def v_func(E, m):
     if m != 0:
         gamma = E/m + 1
