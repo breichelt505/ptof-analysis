@@ -114,12 +114,37 @@ def switching_function(V, V_clips, start_thresh = 0.4, end_thresh = 0.8):
 
     return weights
 
+def stitch_waveforms_twosided(Vs, vclip_lbs, vclip_ubs, start_thresh = 0.4, end_thresh = 0.8):
+    # V_stitch_positive = np.zeros_like(Vs[0])
+    V_stitch_positive = stitch_waveforms(Vs, vclip_ubs, start_thresh, end_thresh)
+    V_stitch_negative = -stitch_waveforms([-V for V in Vs], -vclip_lbs, start_thresh, end_thresh)
+    # print(V_stitch_negative)
+    # for i in range(len(Vs[0])): 
+    #     Vis = np.array([V[i] for V in Vs])
+    #     V_max = max(Vis)
+    #     V_stitch_positive[i] = np.sum(switching_function(V_max, vclip_ubs,  start_thresh, end_thresh)*Vis)
+    
+    # V_stitch_negative = np.zeros_like(Vs[0])
+    # for i in range(len(Vs[0])): 
+    #     Vis = np.array([V[i] for V in Vs])
+    #     V_max = max(-Vis)
+    #     V_stitch_negative[i] = np.sum(switching_function(V_max, -vclip_lbs,  start_thresh, end_thresh)*Vis)
+    
+    V_stitch = np.copy(V_stitch_positive)
+    V_stitch[V_stitch_negative<0.0] = V_stitch_negative[V_stitch_negative<0.0]
+    return V_stitch
+
 @numba.njit()
-def stitch_waveforms(Vs, V_clips):
+def stitch_waveforms(Vs, V_clips, start_thresh = 0.4, end_thresh = 0.8):
     V_stitch = np.zeros_like(Vs[0])
     for i in range(len(Vs[0])): 
         Vis = np.array([V[i] for V in Vs])
-        V_max = max(Vis)
-        V_stitch[i] = np.sum(switching_function(V_max, V_clips)*Vis)
+        V_use = (Vis[Vis < V_clips])[0]
+        V_stitch[i] = np.sum(switching_function(V_use, V_clips,  start_thresh, end_thresh)*Vis)
     return V_stitch
 
+def find_rise_time(t, V, pk_thresh=0.1):
+    i_near = (V > V.max()*pk_thresh).nonzero()[0][0]
+    dV = V[i_near] - V[i_near-1]
+    dt = t[i_near] - t[i_near-1]
+    return t[i_near] - dt/dV * (V[i_near] - V.max()*pk_thresh)
