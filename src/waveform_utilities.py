@@ -3,6 +3,23 @@ import scipy.optimize as opt
 import scipy.stats
 import scipy.interpolate as interp
 import numba
+import matplotlib.pyplot as plt
+
+def subtract_exp_bg(t, V, t_fit_mins, t_fit_maxs):
+    mask = (t>np.inf)
+    for i in range(len(t_fit_mins)):
+        mask += (t>t_fit_mins[i])*(t<t_fit_maxs[i])
+    def fit_fn(t, c, tau, mu):
+        return np.exp(-(t-mu)/tau) + c
+    
+    p0 = [-1.0, 100.0, t[mask][0]]
+    popt, pcov = opt.curve_fit(fit_fn,t[mask],V[mask],p0,maxfev=10000)
+
+    expfit = fit_fn(t, *popt)
+    expfit[t<min(t_fit_mins)] = 0.0
+
+    return V - expfit
+
 
 def subtract_const_bg(t, V, t_fit_min=-np.inf, t_fit_max=-1000):
     """
