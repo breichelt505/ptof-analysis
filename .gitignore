@@ -1,3 +1,5 @@
 presentations
 envs
 scratch
+*.pyc
+__pycache__
